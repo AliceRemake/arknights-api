@@ -1,4 +1,7 @@
-use axum::{routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use dotenv::dotenv;
 use env_logger;
 use sea_orm::{Database, DatabaseConnection};
@@ -45,6 +48,7 @@ async fn main() -> Result<(), Error> {
 
     let app: Router = Router::new()
         .route("/", get(server::home::get))
+        .route("/update", post(server::update::post))
         .with_state(state);
 
     const ADDRESS: &'static str = "127.0.0.1:3000";

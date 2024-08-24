@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.127"
 sea-orm = { version = "1.0.0-rc.5", features = [
     "sqlx-postgres",
     "runtime-tokio-rustls",
