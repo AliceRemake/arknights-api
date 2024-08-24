@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = [".", "entity", "server", "service"]
+members = [".", "entity", "error", "server", "service"]
 
 [profile.dev]
 opt-level = 0
@@ -22,5 +22,7 @@ sea-orm = { version = "1.0.0-rc.5", features = [
     "macros",
 ] }
 server = { path = "server" }
+service = { path = "service" }
 log = "0.4.22"
 env_logger = "0.11.5"
+error = {path = "error"}

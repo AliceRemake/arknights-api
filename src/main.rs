@@ -5,12 +5,31 @@ use sea_orm::{Database, DatabaseConnection};
 
 use std::env;
 
+use error::Error;
+
 use server::state::AppState;
+use service::resource::{fs, get_local_resource_instance, get_remote_resource_instance, HOME};
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Error> {
     dotenv().ok();
     env_logger::init();
+
+    let local_resource = get_local_resource_instance();
+    let remote_resource = get_remote_resource_instance();
+
+    let local_path = format!(
+        "{}/{}/{}",
+        HOME.as_str(),
+        local_resource.dist,
+        local_resource.repo
+    );
+
+    if !fs::exists(&local_path) || (fs::is_dir(&local_path) && fs::is_empty(&local_path)?) {
+        local_resource.init()?;
+    }
+
+    local_resource.pull(remote_resource)?;
 
     let url: String = match env::var("DATABASE_URL") {
         Ok(url) => url,
@@ -36,4 +55,6 @@ async fn main() {
     };
 
     axum::serve(listener, app).await.unwrap();
+
+    Ok(())
 }
