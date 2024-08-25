@@ -1,8 +1,7 @@
-use error::Error;
+use ::error::Error;
+use ::entity::{operator, Operator};
 
-use entity::{operator, Operator};
-
-use sea_orm::{ActiveModelTrait, DatabaseConnection, EntityTrait};
+use sea_orm::*;
 
 pub struct Mutation;
 

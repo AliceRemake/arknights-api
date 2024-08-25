@@ -1,24 +1,19 @@
-use error::Error;
+use crate::resource::*;
+use crate::operator::*;
+use crate::migration::{drop_table, create_table};
 
-use entity::{operator, Operator, Position, Profession, SubProfession};
+use ::error::Error;
+use ::entity::{operator::ActiveModel, Operator, Position, Profession, SubProfession};
 
-use crate::resource::{get_local_resource_instance, HOME};
-
-use serde_json;
-
-use regex::Regex;
-use sea_orm::{ActiveValue, ConnectionTrait, DatabaseConnection, EntityTrait};
-use sea_orm_migration::prelude::Table;
-use sea_orm_migration::SchemaManager;
-use std::collections;
+use sea_orm::*;
+use sea_orm_migration::prelude::*;
 
 pub async fn migrate(db: &DatabaseConnection) -> Result<(), Error> {
-    let local_resource = get_local_resource_instance();
     let character_table = std::fs::read_to_string(format!(
         "{}/{}/{}/{}",
         HOME.as_str(),
-        local_resource.dist,
-        local_resource.repo,
+        LOCAL_RESOURCE.dist,
+        LOCAL_RESOURCE.repo,
         "gamedata/excel/character_table.json",
     ))?;
     let payload: serde_json::Value = serde_json::from_str(&character_table)?;
@@ -26,7 +21,7 @@ pub async fn migrate(db: &DatabaseConnection) -> Result<(), Error> {
         .as_object()
         .ok_or(Error::RuntimeError(format!("can not parse json")))?;
 
-    let mut operators: Vec<operator::ActiveModel> = Vec::new();
+    let mut operators: Vec<ActiveModel> = Vec::new();
 
     let recruitable_operators = recruitable_operators()?;
 
@@ -63,7 +58,7 @@ pub async fn migrate(db: &DatabaseConnection) -> Result<(), Error> {
             tags.push(String::from(tag.as_str().unwrap()));
         }
 
-        operators.push(operator::ActiveModel {
+        operators.push(ActiveModel {
             recruitable: ActiveValue::Set(recruitable_operators.contains(&name)),
             id: ActiveValue::NotSet,
             icon: ActiveValue::Set(icon),
@@ -76,30 +71,23 @@ pub async fn migrate(db: &DatabaseConnection) -> Result<(), Error> {
         });
     }
 
-    let manager = SchemaManager::new(db);
-
-    manager
-        .drop_table(Table::drop().table(Operator).if_exists().to_owned())
-        .await?;
-
-    let backend = db.get_database_backend();
-    let schema = sea_orm::Schema::new(backend);
-    manager
-        .create_table(schema.create_table_from_entity(Operator))
-        .await?;
-
-    Operator::insert_many(operators).exec(db).await?;
+    drop_table(db, Operator).await?;
+    create_table(db, Operator).await?;
+    Mutation::insert_many(db, operators).await?;
 
     Ok(())
 }
 
-fn recruitable_operators() -> Result<collections::HashSet<String>, error::Error> {
-    let local_resource = get_local_resource_instance();
+use serde_json;
+use regex::Regex;
+use std::collections::HashSet;
+
+fn recruitable_operators() -> Result<HashSet<String>, Error> {
     let gacha_table = std::fs::read_to_string(format!(
         "{}/{}/{}/{}",
         HOME.as_str(),
-        local_resource.dist,
-        local_resource.repo,
+        LOCAL_RESOURCE.dist,
+        LOCAL_RESOURCE.repo,
         "gamedata/excel/gacha_table.json",
     ))?;
 
@@ -111,7 +99,7 @@ fn recruitable_operators() -> Result<collections::HashSet<String>, error::Error>
         .as_str()
         .ok_or(Error::RuntimeError(format!("can not parse json")))?;
 
-    let mut operators: collections::HashSet<String> = collections::HashSet::new();
+    let mut operators: HashSet<String> = HashSet::new();
 
     let re = Regex::new(r"(★\\n| )(<@rc.eml>)?([\u4e00-\u9fa5a-zA-Z0-9-]+)(</>)?")?;
     for iter in re.captures_iter(payload) {

@@ -2296,6 +2296,7 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "entity",
+ "error",
  "log",
  "sea-orm",
  "serde",
@@ -2309,7 +2310,6 @@ version = "0.1.0"
 dependencies = [
  "entity",
  "error",
- "http",
  "lazy_static",
  "regex",
  "reqwest",

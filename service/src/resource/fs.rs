@@ -1,4 +1,4 @@
-use error::Error;
+use ::error::Error;
 
 pub fn exists(path: &str) -> bool {
     std::path::Path::new(path).exists()

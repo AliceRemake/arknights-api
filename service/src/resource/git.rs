@@ -1,7 +1,8 @@
-use std::process::Command;
+use crate::resource::*;
 
-use super::*;
-use error::Error;
+use ::error::Error;
+
+use std::process::Command;
 
 impl LocalResource {
     pub fn init(&self) -> Result<(), Error> {

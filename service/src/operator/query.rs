@@ -1,8 +1,7 @@
-use error::Error;
+use ::error::Error;
+use ::entity::{operator, Operator, Position, Profession, SubProfession};
 
-use entity::{operator, Operator, Position, Profession, SubProfession};
-
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
+use sea_orm::*;
 
 pub struct Query;
 
@@ -92,5 +91,3 @@ impl Query {
         Ok(response)
     }
 }
-
-

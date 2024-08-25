@@ -1,20 +1,24 @@
-use crate::resource::{LocalResource, RemoteResource};
-use error::Error;
-use reqwest;
-use crate::resource::HOME;
+use crate::resource::*;
+
+use ::error::Error;
+
+use reqwest::Client;
 
 impl LocalResource {
     pub fn version(&self) -> Result<String, Error> {
         Ok(std::fs::read_to_string(format!(
             "{}/{}/{}/{}",
-            HOME.as_str(), self.dist, self.repo, "version"
+            HOME.as_str(),
+            self.dist,
+            self.repo,
+            "version"
         ))?)
     }
 }
 
 impl RemoteResource {
     pub async fn version(&self) -> Result<String, Error> {
-        let client = reqwest::Client::builder()
+        let client = Client::builder()
             .danger_accept_invalid_certs(true)
             .build()?;
 

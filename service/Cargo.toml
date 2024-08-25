@@ -3,19 +3,23 @@ name = "service"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "service"
+path = "src/lib.rs"
+
 [dependencies]
 error = { path = "../error" }
 entity = { path = "../entity" }
+
+regex = "1.10.6"
+lazy_static = "1.5.0"
+serde_json = "1.0.127"
+sea-orm-migration = "1.0.0"
+serde = { version = "1.0", features = ["derive"] }
+reqwest = { version = "0.12", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
 sea-orm = { version = "1.0.0-rc.5", features = [
     "sqlx-postgres",
     "runtime-tokio-rustls",
     "macros",
 ] }
-reqwest = { version = "0.12", features = ["json"] }
-tokio = { version = "1", features = ["full"] }
-http = "1.1.0"
-lazy_static = "1.5.0"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0.127"
-regex = "1.10.6"
-sea-orm-migration = "1.0.0"
