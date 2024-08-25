@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+error = { path = "../error" }
 entity = { path = "../entity" }
 sea-orm = { version = "1.0.0-rc.5", features = [
     "sqlx-postgres",
@@ -13,5 +14,8 @@ sea-orm = { version = "1.0.0-rc.5", features = [
 reqwest = { version = "0.12", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 http = "1.1.0"
-error = { path = "../error" }
 lazy_static = "1.5.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.127"
+regex = "1.10.6"
+sea-orm-migration = "1.0.0"

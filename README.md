@@ -32,4 +32,6 @@ dpage/pgadmin4:8
 
 ```env
 DATABASE_URL=postgres://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}
+TOKEN={TOKEN}
+RUST_LOG={LOG_LEVEL}
 ```

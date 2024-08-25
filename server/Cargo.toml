@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+service = { path = "../service" }
+entity = {path = "../entity"}
 axum = "0.7.5"
+log = "0.4.22"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.127"
 sea-orm = { version = "1.0.0-rc.5", features = [

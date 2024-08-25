@@ -34,7 +34,6 @@ pub struct LocalResource {
 }
 
 pub fn get_local_resource_instance() -> &'static LocalResource {
-    // let home: String = std::env::var("HOME").expect("");
     static LOCAL_RESOURCE: LocalResource = LocalResource {
         dist: ".arknights-api",
         repo: "ArknightsGameResource",

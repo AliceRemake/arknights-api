@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 use core::fmt;
 
 #[derive(Clone, Debug, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]
-#[sea_orm(rs_type = "u8", db_type = "TinyUnsigned")]
+#[sea_orm(rs_type = "i32", db_type = "Integer")]
 pub enum SubProfession {
     UNKNOW = 0,
     CHARGER = 1,

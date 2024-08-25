@@ -12,7 +12,7 @@ pub struct Model {
     pub id: i32,
     pub icon: String,
     pub name: String,
-    pub rarity: u8,
+    pub rarity: i32,
     pub profession: Profession,
     pub sub_profession: SubProfession,
     pub recruitable: bool,
