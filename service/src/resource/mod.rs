@@ -37,6 +37,21 @@ pub struct RemoteResource {
 }
 
 pub async fn need_update() -> Result<bool, Error> {
+    let local_path = format!(
+        "{}/{}/{}",
+        HOME.as_str(),
+        LOCAL_RESOURCE.dist,
+        LOCAL_RESOURCE.repo
+    );
+
+    if !fs::exists(&local_path) {
+        fs::create_dir(&local_path)?;
+    }
+
+    if fs::is_empty(&local_path)? || !fs::exists(&format!("{}/{}", local_path, "version")) {
+        return Ok(true);
+    }
+
     Ok(LOCAL_RESOURCE.version()? == REMOTE_RESOURCE.version().await?)
 }
 
