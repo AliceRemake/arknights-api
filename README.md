@@ -43,10 +43,11 @@ docker build -t arknights-api .
 ```
 
 ```bash
-docker run -d \
--e RUST_LOG=info \
+docker run -itd \
+-e RUST_LOG={} \
 -e DATABASE_URL={} \
 -e TOKEN={} \
+-v arknights-api-volume:/root/.arknights-api \
 -p 3000:3000 \
 --restart=always \
 --network=bridge \

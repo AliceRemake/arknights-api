@@ -1,17 +1,11 @@
 use axum::routing::{get, post};
 
-const ADDRESS: &'static str = "127.0.0.1:3000";
+const ADDRESS: &'static str = "0.0.0.0:3000";
 
 #[tokio::main]
 async fn main() -> Result<(), error::Error> {
     dotenv::dotenv().ok();
     env_logger::init();
-
-    log::info!("updating local resource");
-    if service::resource::need_update().await? {
-        service::resource::update_local_resource().await?;
-    }
-    log::info!("updated local resource");
 
     let url: String = match std::env::var("DATABASE_URL") {
         Ok(url) => url,
@@ -25,6 +19,22 @@ async fn main() -> Result<(), error::Error> {
     };
     log::info!("connected to database {}", &url);
 
+    match service::resource::need_update().await {
+        Ok(need_update) => {
+            if need_update {
+                log::info!("updating local resource");
+                service::resource::update_local_resource().await?;
+                log::info!("updated local resource");
+                log::info!("migrating database");
+                service::migration::migrate(&db).await?;
+                log::info!("migrated database");
+            }
+        }
+        Err(_) => {
+            log::warn!("can not get latest version now, skip");
+        }
+    };
+
     let state = server::AppState { db };
 
     let app = axum::Router::new()
@@ -33,6 +43,42 @@ async fn main() -> Result<(), error::Error> {
         .route(
             server::operator::query::ROUTE,
             get(server::operator::query::get),
+        )
+        .route(
+            server::resource::avatar::ROUTE,
+            get(server::resource::avatar::get),
+        )
+        .route(
+            server::resource::building_skill::ROUTE,
+            get(server::resource::building_skill::get),
+        )
+        .route(
+            server::resource::enemy::ROUTE,
+            get(server::resource::enemy::get),
+        )
+        .route(
+            server::resource::item_rarity::ROUTE,
+            get(server::resource::item_rarity::get),
+        )
+        .route(
+            server::resource::item::ROUTE,
+            get(server::resource::item::get),
+        )
+        .route(
+            server::resource::map::ROUTE,
+            get(server::resource::map::get),
+        )
+        .route(
+            server::resource::portrait::ROUTE,
+            get(server::resource::portrait::get),
+        )
+        .route(
+            server::resource::skill::ROUTE,
+            get(server::resource::skill::get),
+        )
+        .route(
+            server::resource::skin::ROUTE,
+            get(server::resource::skin::get),
         )
         .with_state(state);
 

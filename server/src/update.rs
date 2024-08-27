@@ -11,7 +11,7 @@ pub async fn post(
     let client_token = match payload["TOKEN"].as_str() {
         Some(token) => token,
         None => {
-            let response = (StatusCode::BAD_REQUEST, "can not parse `TOKEN`");
+            let response = (StatusCode::BAD_REQUEST, "bad parameter `TOKEN`");
             log::error!("[{}]{:?}", ROUTE, response);
             return Err(response);
         }
@@ -37,9 +37,7 @@ pub async fn post(
         Ok(need_update) => {
             if need_update {
                 match service::resource::update_local_resource().await {
-                    Ok(_) => {
-                        log::info!("[{}]{}", ROUTE, "updated local resource");
-                    }
+                    Ok(_) => log::info!("[{}]{}", ROUTE, "updated local resource"),
                     Err(err) => {
                         let response = (StatusCode::INTERNAL_SERVER_ERROR, "");
                         log::error!("[{}]{:?}{}", ROUTE, response, err);
@@ -57,9 +55,7 @@ pub async fn post(
 
     log::info!("[{}]{}", ROUTE, "migrating database");
     match service::migration::migrate(&state.db).await {
-        Ok(_) => {
-            log::info!("[{}]{}", ROUTE, "migrated database");
-        }
+        Ok(_) => log::info!("[{}]{}", ROUTE, "migrated database"),
         Err(err) => {
             let response = (StatusCode::INTERNAL_SERVER_ERROR, "");
             log::error!("[{}]{:?}{}", ROUTE, response, err);

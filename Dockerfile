@@ -20,7 +20,9 @@ RUN apt update -o Acquire::http::No-Cache=True \
     && apt install -y libssl3 -o Acquire::http::No-Cache=True \
     && apt install -y git -o Acquire::http::No-Cache=True \
     && git config --global http.sslverify "false" \
-    && git config --global https.sslverify "false"
+    && git config --global https.sslverify "false" \
+    && git config --global http.postBuffer 10485760 \
+    && git config --global https.postBuffer 10485760
 
 WORKDIR /app
 COPY --from=builder /app/target/release/arknights-api /root

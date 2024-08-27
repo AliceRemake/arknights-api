@@ -67,6 +67,7 @@ pub async fn update_local_resource() -> Result<(), Error> {
         LOCAL_RESOURCE.init()?;
     }
 
+    LOCAL_RESOURCE.fetch(&REMOTE_RESOURCE)?;
     LOCAL_RESOURCE.pull(&REMOTE_RESOURCE)?;
 
     Ok(())
