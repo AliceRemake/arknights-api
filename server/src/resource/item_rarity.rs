@@ -38,7 +38,7 @@ pub async fn get(
     header.insert(
         "Content-Disposition",
         // HeaderValue::from_static("image"),
-        match HeaderValue::from_str(&format!("attachment; filename=\"{}.png\"", icon)) {
+        match HeaderValue::from_str(&format!("inline; filename=\"{}.png\"", icon)) {
             Ok(value) => value,
             Err(err) => {
                 let response = (StatusCode::INTERNAL_SERVER_ERROR, "");
