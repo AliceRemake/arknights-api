@@ -1,9 +1,5 @@
-pub mod position;
-pub mod profession;
-pub mod sub_profession;
+pub mod enemy;
 pub mod operator;
 
-pub use position::Position;
-pub use profession::Profession;
-pub use sub_profession::SubProfession;
+pub use enemy::Entity as Enemy;
 pub use operator::Entity as Operator;

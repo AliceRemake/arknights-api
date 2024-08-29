@@ -1,10 +1,10 @@
-use sea_orm::prelude::*;
-use serde::{Serialize, Deserialize};
+use sea_orm::*;
+use serde::{Deserialize, Serialize};
 
 use core::fmt;
 
 #[derive(Clone, Debug, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]
-#[sea_orm(rs_type = "i32", db_type = "Integer")]
+#[sea_orm(rs_type = "i16", db_type = "SmallInteger")]
 pub enum Position {
     UNKNOW = 0,
     MELEE = 1,
