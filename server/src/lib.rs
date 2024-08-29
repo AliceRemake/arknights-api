@@ -5,11 +5,13 @@ pub struct AppState {
 
 pub use axum::{
     extract::{Json, Path, State},
-    http::{StatusCode, HeaderMap, HeaderName, HeaderValue},
+    http::{HeaderMap, HeaderName, HeaderValue, StatusCode},
 };
 
 pub mod home;
+pub mod migrate;
+pub mod resource;
 pub mod update;
 
+pub mod enemy;
 pub mod operator;
-pub mod resource;

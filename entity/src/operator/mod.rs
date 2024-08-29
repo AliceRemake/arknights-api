@@ -1,9 +1,13 @@
-use sea_orm::entity::prelude::*;
-use serde::{Serialize, Deserialize};
+pub mod position;
+pub mod profession;
+pub mod sub_profession;
 
-use crate::position::Position;
-use crate::profession::Profession;
-use crate::sub_profession::SubProfession;
+pub use position::Position;
+pub use profession::Profession;
+pub use sub_profession::SubProfession;
+
+use sea_orm::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel, Serialize, Deserialize)]
 #[sea_orm(table_name = "operator")]
@@ -12,7 +16,7 @@ pub struct Model {
     pub id: i32,
     pub icon: String,
     pub name: String,
-    pub rarity: i32,
+    pub rarity: i16,
     pub profession: Profession,
     pub sub_profession: SubProfession,
     pub recruitable: bool,

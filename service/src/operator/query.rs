@@ -1,5 +1,5 @@
+use ::entity::*;
 use ::error::Error;
-use ::entity::{operator, Operator, Position, Profession, SubProfession};
 
 use sea_orm::*;
 
@@ -38,7 +38,7 @@ impl Query {
 
     pub async fn find_by_profession(
         db: &DatabaseConnection,
-        profession: Profession,
+        profession: operator::Profession,
     ) -> Result<Vec<operator::Model>, Error> {
         let response = Operator::find()
             .filter(operator::Column::Profession.eq(profession))
@@ -49,7 +49,7 @@ impl Query {
 
     pub async fn find_by_sub_profession(
         db: &DatabaseConnection,
-        sub_profession: SubProfession,
+        sub_profession: operator::SubProfession,
     ) -> Result<Vec<operator::Model>, Error> {
         let response = Operator::find()
             .filter(operator::Column::SubProfession.eq(sub_profession))
@@ -71,7 +71,7 @@ impl Query {
 
     pub async fn find_by_position(
         db: &DatabaseConnection,
-        position: Position,
+        position: operator::Position,
     ) -> Result<Vec<operator::Model>, Error> {
         let response = Operator::find()
             .filter(operator::Column::Position.eq(position))

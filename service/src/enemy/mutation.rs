@@ -6,31 +6,31 @@ use sea_orm::*;
 pub struct Mutation;
 
 impl Mutation {
-    pub async fn insert(db: &DatabaseConnection, data: operator::ActiveModel) -> Result<(), Error> {
+    pub async fn insert(db: &DatabaseConnection, data: enemy::ActiveModel) -> Result<(), Error> {
         data.insert(db).await?;
         Ok(())
     }
 
-    pub async fn update(db: &DatabaseConnection, data: operator::ActiveModel) -> Result<(), Error> {
+    pub async fn update(db: &DatabaseConnection, data: enemy::ActiveModel) -> Result<(), Error> {
         data.update(db).await?;
         Ok(())
     }
 
-    pub async fn save(db: &DatabaseConnection, data: operator::ActiveModel) -> Result<(), Error> {
+    pub async fn save(db: &DatabaseConnection, data: enemy::ActiveModel) -> Result<(), Error> {
         data.save(db).await?;
         Ok(())
     }
 
     pub async fn insert_many(
         db: &DatabaseConnection,
-        data: Vec<operator::ActiveModel>,
+        data: Vec<enemy::ActiveModel>,
     ) -> Result<(), Error> {
-        Operator::insert_many(data).exec(db).await?;
+        Enemy::insert_many(data).exec(db).await?;
         Ok(())
     }
 
     pub async fn delete_all(db: &DatabaseConnection) -> Result<(), Error> {
-        Operator::delete_many().exec(db).await?;
+        Enemy::delete_many().exec(db).await?;
         Ok(())
     }
 }

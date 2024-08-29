@@ -19,6 +19,11 @@ async fn main() -> Result<(), error::Error> {
     };
     log::info!("connected to database {}", &url);
 
+    // DEBUG
+    // log::info!("migrating database");
+    // service::migration::migrate(&db).await?;
+    // log::info!("migrated database");
+
     match service::resource::need_update().await {
         Ok(need_update) => {
             if need_update {
@@ -28,6 +33,8 @@ async fn main() -> Result<(), error::Error> {
                 log::info!("migrating database");
                 service::migration::migrate(&db).await?;
                 log::info!("migrated database");
+            } else {
+                log::info!("local resource already up to date");
             }
         }
         Err(_) => {
@@ -40,10 +47,12 @@ async fn main() -> Result<(), error::Error> {
     let app = axum::Router::new()
         .route(server::home::ROUTE, get(server::home::get))
         .route(server::update::ROUTE, post(server::update::post))
+        .route(server::migrate::ROUTE, post(server::migrate::post))
         .route(
             server::operator::query::ROUTE,
             get(server::operator::query::get),
         )
+        .route(server::enemy::query::ROUTE, get(server::enemy::query::get))
         .route(
             server::resource::avatar::ROUTE,
             get(server::resource::avatar::get),

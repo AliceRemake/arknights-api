@@ -1,10 +1,10 @@
-use sea_orm::prelude::*;
-use serde::{Serialize, Deserialize};
+use sea_orm::*;
+use serde::{Deserialize, Serialize};
 
 use core::fmt;
 
 #[derive(Clone, Debug, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]
-#[sea_orm(rs_type = "i32", db_type = "Integer")]
+#[sea_orm(rs_type = "i16", db_type = "SmallInteger")]
 pub enum SubProfession {
     UNKNOW = 0,
     CHARGER = 1,
@@ -285,7 +285,7 @@ impl From<&SubProfession> for &'static str {
     }
 }
 
-impl fmt::Display for SubProfession  {
+impl fmt::Display for SubProfession {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", <&SubProfession as Into<&'static str>>::into(self))
     }

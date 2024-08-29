@@ -1,9 +1,10 @@
+use crate::migration::utils::*;
 use crate::resource::*;
-use crate::operator::*;
-use crate::migration::{drop_table, create_table};
 
+use crate::operator::*;
+
+use ::entity::*;
 use ::error::Error;
-use ::entity::{operator::ActiveModel, Operator, Position, Profession, SubProfession};
 
 use sea_orm::*;
 use sea_orm_migration::prelude::*;
@@ -17,48 +18,25 @@ pub async fn migrate(db: &DatabaseConnection) -> Result<(), Error> {
         "gamedata/excel/character_table.json",
     ))?;
     let payload: serde_json::Value = serde_json::from_str(&character_table)?;
-    let payload = payload
-        .as_object()
-        .ok_or(Error::RuntimeError(format!("can not parse json")))?;
+    let payload = as_object(&payload)?;
 
-    let mut operators: Vec<ActiveModel> = Vec::new();
+    let mut operators: Vec<operator::ActiveModel> = Vec::new();
 
     let recruitable_operators = recruitable_operators()?;
 
     for (key, value) in payload {
         let icon = String::from(key);
-        let name = String::from(
-            value["name"]
-                .as_str()
-                .ok_or(Error::RuntimeError(format!("can not parse json")))?,
-        );
-        let rarity = value["rarity"]
-            .as_i64()
-            .ok_or(Error::RuntimeError(format!("can not parse json")))? as i32;
-        let profession = Profession::from(
-            value["profession"]
-                .as_str()
-                .ok_or(Error::RuntimeError(format!("can not parse json")))?,
-        );
-        let sub_profession = SubProfession::from(
-            value["subProfessionId"]
-                .as_str()
-                .ok_or(Error::RuntimeError(format!("can not parse json")))?,
-        );
-        let position = Position::from(
-            value["position"]
-                .as_str()
-                .ok_or(Error::RuntimeError(format!("can not parse json")))?,
-        );
+        let name = String::from(as_str(&value["name"])?);
+        let rarity = as_i64(&value["rarity"])? as i16;
+        let profession = operator::Profession::from(as_str(&value["profession"])?);
+        let sub_profession = operator::SubProfession::from(as_str(&value["subProfessionId"])?);
+        let position = operator::Position::from(as_str(&value["position"])?);
         let mut tags: Vec<String> = Vec::new();
-        for tag in value["tagList"]
-            .as_array()
-            .ok_or(Error::RuntimeError(format!("can not parse json")))?
-        {
+        for tag in as_array(&value["tagList"])? {
             tags.push(String::from(tag.as_str().unwrap()));
         }
 
-        operators.push(ActiveModel {
+        operators.push(operator::ActiveModel {
             recruitable: ActiveValue::Set(recruitable_operators.contains(&name)),
             id: ActiveValue::NotSet,
             icon: ActiveValue::Set(icon),
@@ -78,8 +56,8 @@ pub async fn migrate(db: &DatabaseConnection) -> Result<(), Error> {
     Ok(())
 }
 
-use serde_json;
 use regex::Regex;
+use serde_json;
 use std::collections::HashSet;
 
 fn recruitable_operators() -> Result<HashSet<String>, Error> {
