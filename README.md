@@ -1,6 +1,8 @@
 # arknights-api
 
-## postgres
+## Quick Start
+
+1. postgres
 
 ```bash
 docker run -d \
@@ -15,32 +17,7 @@ docker run -d \
 postgres:16
 ```
 
-## pgadmin (optional)
-
-```bash
-docker run -d \
--e PGADMIN_DEFAULT_EMAIL={} \
--e PGADMIN_DEFAULT_PASSWORD={} \
--p 5433:80 \
---restart=always \
---network=bridge \
---name pgadmin \
-dpage/pgadmin4:8
-```
-
-## .env
-
-```env
-DATABASE_URL=postgres://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}
-TOKEN={TOKEN}
-RUST_LOG={LOG_LEVEL}
-```
-
-## arknights-api
-
-```bash
-docker build -t arknights-api .
-```
+2. arknights-api
 
 ```bash
 docker run -itd \
@@ -52,5 +29,15 @@ docker run -itd \
 --restart=always \
 --network=bridge \
 --name arknights-api \
-arknights-api:latest
+ghcr.io/aliceremake/arknights-api:latest
+```
+
+## Develop
+
+1 `.env`
+
+```.env
+DATABASE_URL=postgres://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}
+TOKEN={TOKEN}
+RUST_LOG={LOG_LEVEL}
 ```
